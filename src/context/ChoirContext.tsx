@@ -31,15 +31,36 @@ interface ChoirContextType {
 
 const ChoirContext = createContext<ChoirContextType | undefined>(undefined);
 
+// Données issues du document "ETAT DES COTISATIONS MENSUELLES DE LA CHORALE NDP BEOUMI" (Mars 2026)
 const INITIAL_MEMBERS: Member[] = [
-  { id: "1", firstName: "Jean", lastName: "Koffi", phone: "0707070707", voicePart: "Ténor", role: "Président", status: "Actif", photoUrl: "https://storage.googleapis.com/dala-prod-public-storage/generated-images/4fbf6471-3232-4b8c-be90-2e48c4d6965f/member-photo-1-54a5945f-1779975032634.webp" },
-  { id: "2", firstName: "Marie", lastName: "Koné", phone: "0505050505", voicePart: "Soprano", role: "Trésorier", status: "Actif", photoUrl: "https://storage.googleapis.com/dala-prod-public-storage/generated-images/4fbf6471-3232-4b8c-be90-2e48c4d6965f/member-photo-2-9762f933-1779975032639.webp" },
-  { id: "3", firstName: "Paul", lastName: "N'Guessan", phone: "0101010101", voicePart: "Basse", role: "Maître de Chœur", status: "Actif", photoUrl: "https://storage.googleapis.com/dala-prod-public-storage/generated-images/4fbf6471-3232-4b8c-be90-2e48c4d6965f/member-photo-3-1b17fdff-1779975032626.webp" },
+  { id: "M001", firstName: "Mathias", lastName: "ADOU KOUASSI", phone: "0708091011", voicePart: "Basse", role: "Simple choriste", status: "Actif", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" },
+  { id: "M002", firstName: "Sylvie", lastName: "KOFFI AMENAN", phone: "0506070809", voicePart: "Soprano", role: "Secr\u00e9taire", status: "Actif", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" },
+  { id: "M003", firstName: "F\u00e9lix", lastName: "N'GUESSAN KOUAME", phone: "0102030405", voicePart: "T\u00e9nor", role: "Ma\u00eetre de Ch\u0153ur", status: "Actif", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop" },
+  { id: "M004", firstName: "D\u00e9sir\u00e9", lastName: "KOUADIO KONAN", phone: "0707070707", voicePart: "Basse", role: "Tr\u00e9sorier", status: "Actif", photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop" },
+  { id: "M005", firstName: "Serge", lastName: "YAO KOUASSI", phone: "0505050505", voicePart: "Alto", role: "Bureau", status: "Actif", photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop" },
 ];
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
-  { id: "t1", type: "Recette", category: "Dons", amount: 50000, date: new Date().toISOString(), description: "Don anonyme pour la chorale" },
-  { id: "t2", type: "Dépense", category: "Transport", amount: 5000, date: new Date().toISOString(), description: "Déplacement Maître de chœur" },
+  // Cotisations ADOU KOUASSI MATHIAS (2026)
+  { id: "tx_m001_1", type: "Recette", category: "Cotisations", amount: 400, date: "2026-01-15", description: "Cotisation Mensuelle (Jan) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_2", type: "Recette", category: "Cotisations", amount: 400, date: "2026-02-15", description: "Cotisation Mensuelle (F\u00e9v) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_3", type: "Recette", category: "Cotisations", amount: 400, date: "2026-03-12", description: "Cotisation Mensuelle (Mar) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_4", type: "Recette", category: "Cotisations", amount: 400, date: "2026-04-10", description: "Cotisation Mensuelle (Avr) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_5", type: "Recette", category: "Cotisations", amount: 500, date: "2026-05-20", description: "Cotisation Mensuelle (Mai) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_6", type: "Recette", category: "Cotisations", amount: 500, date: "2026-06-15", description: "Cotisation Mensuelle (Juin) - ADOU KOUASSI Mathias" },
+  { id: "tx_m001_7", type: "Recette", category: "Cotisations", amount: 400, date: "2026-07-05", description: "Cotisation Mensuelle (Juil) - ADOU KOUASSI Mathias" },
+  
+  // Solde initial (Report)
+  { id: "tx_init", type: "Recette", category: "Autre", amount: 250000, date: "2026-01-01", description: "Solde de report ann\u00e9e pr\u00e9c\u00e9dente" },
+  
+  // D\u00e9penses exemples
+  { id: "tx_exp1", type: "D\u00e9pense", category: "Achat", amount: 15000, date: "2026-02-10", description: "Achat de nouvelles partitions" },
+];
+
+const INITIAL_CONTRIBUTIONS: Contribution[] = [
+  { memberId: "M001", year: 2026, paidMonths: [1, 2, 3, 4, 5, 6, 7] },
+  { memberId: "M002", year: 2026, paidMonths: [1, 2, 3] },
+  { memberId: "M003", year: 2026, paidMonths: [1, 2, 3, 4] },
 ];
 
 export const ChoirProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -60,7 +81,7 @@ export const ChoirProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [contributions, setContributions] = useState<Contribution[]>(() => {
     const saved = localStorage.getItem("choir_contributions");
-    return saved ? JSON.parse(saved) : [];
+    return saved ? JSON.parse(saved) : INITIAL_CONTRIBUTIONS;
   });
 
   const [exceptionalContributions, setExceptionalContributions] = useState<ExceptionalContribution[]>(() => {
@@ -119,45 +140,45 @@ export const ChoirProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const addMember = (memberData: Omit<Member, 'id'>) => {
     const newMember: Member = { ...memberData, id: Math.random().toString(36).substr(2, 6).toUpperCase() };
     setMembers(prev => [...prev, newMember]);
-    addActivity(`Membre ajouté : ${newMember.lastName} ${newMember.firstName}`, "member");
-    toast.success("Membre ajouté avec succès");
+    addActivity(`Membre ajout\u00e9 : ${newMember.lastName} ${newMember.firstName}`, "member");
+    toast.success("Membre ajout\u00e9 avec succ\u00e8s");
   };
 
   const updateMember = (updatedMember: Member) => {
     setMembers(prev => prev.map(m => m.id === updatedMember.id ? updatedMember : m));
-    addActivity(`Fiche membre mise à jour : ${updatedMember.lastName}`, "member");
-    toast.info("Informations mises à jour");
+    addActivity(`Fiche membre mise \u00e0 jour : ${updatedMember.lastName}`, "member");
+    toast.info("Informations mises \u00e0 jour");
   };
 
   const deleteMember = (id: string) => {
     const member = members.find(m => m.id === id);
     setMembers(prev => prev.filter(m => m.id !== id));
-    addActivity(`Membre supprimé : ${member?.lastName}`, "member");
-    toast.error("Membre supprimé");
+    addActivity(`Membre supprim\u00e9 : ${member?.lastName}`, "member");
+    toast.error("Membre supprim\u00e9");
   };
 
   const addAttendanceSession = (sessionData: Omit<AttendanceSession, 'id'>) => {
     const newSession: AttendanceSession = { ...sessionData, id: Math.random().toString(36).substr(2, 9) };
     setAttendanceSessions(prev => [newSession, ...prev]);
-    addActivity(`Pointage effectué (${newSession.type})`, "attendance");
-    toast.success("Présences enregistrées");
+    addActivity(`Pointage effectu\u00e9 (${newSession.type})`, "attendance");
+    toast.success("Pr\u00e9sences enregistr\u00e9es");
   };
 
   const deleteAttendanceSession = (id: string) => {
     setAttendanceSessions(prev => prev.filter(s => s.id !== id));
-    toast.info("Session de pointage supprimée");
+    toast.info("Session de pointage supprim\u00e9e");
   };
 
   const addTransaction = (transactionData: Omit<Transaction, 'id'>) => {
     const newTransaction: Transaction = { ...transactionData, id: Math.random().toString(36).substr(2, 9) };
     setTransactions(prev => [newTransaction, ...prev]);
-    addActivity(`${newTransaction.type === "Recette" ? "Entrée" : "Sortie"} : ${newTransaction.description}`, "payment");
-    toast.success("Opération validée");
+    addActivity(`${newTransaction.type === "Recette" ? "Entr\u00e9e" : "Sortie"} : ${newTransaction.description}`, "payment");
+    toast.success("Op\u00e9ration valid\u00e9e");
   };
 
   const deleteTransaction = (id: string) => {
     setTransactions(prev => prev.filter(t => t.id !== id));
-    toast.info("Transaction annulée");
+    toast.info("Transaction annul\u00e9e");
   };
 
   const toggleContribution = (memberId: string, month: number, year: number) => {
@@ -188,45 +209,45 @@ export const ChoirProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setExceptionalContributions(prev => [newContribution, ...prev]);
     const member = members.find(m => m.id === newContribution.memberId);
     addActivity(`Cotisation Exc. : ${member?.lastName} (${newContribution.amount} FCFA)`, "payment");
-    toast.success("Cotisation exceptionnelle enregistrée");
+    toast.success("Cotisation exceptionnelle enregistr\u00e9e");
   };
 
   const deleteExceptionalContribution = (id: string) => {
     setExceptionalContributions(prev => prev.filter(c => c.id !== id));
-    toast.info("Cotisation exceptionnelle supprimée");
+    toast.info("Cotisation exceptionnelle supprim\u00e9e");
   };
 
   const addCredit = (creditData: Omit<Credit, 'id'>) => {
     const newCredit: Credit = { ...creditData, id: Math.random().toString(36).substr(2, 9).toUpperCase() };
     setCredits(prev => [newCredit, ...prev]);
     const member = members.find(m => m.id === newCredit.memberId);
-    addActivity(`Crédit accordé : ${member?.lastName} (${newCredit.amount} FCFA)`, "payment");
-    toast.success("Crédit enregistré");
+    addActivity(`Cr\u00e9dit accord\u00e9 : ${member?.lastName} (${newCredit.amount} FCFA)`, "payment");
+    toast.success("Cr\u00e9dit enregistr\u00e9");
   };
 
   const updateCreditStatus = (id: string, status: Credit['status']) => {
     setCredits(prev => prev.map(c => {
       if (c.id === id) {
-        if (status === 'Remboursé' && c.status !== 'Remboursé') {
+        if (status === 'Rembours\u00e9' && c.status !== 'Rembours\u00e9') {
           // If credit is repaid, add a transaction
           addTransaction({
             type: 'Recette',
-            category: 'Remboursement Crédit',
+            category: 'Remboursement Cr\u00e9dit',
             amount: c.amount,
             date: new Date().toISOString().split('T')[0],
-            description: `Remboursement crédit #${c.id} - ${members.find(m => m.id === c.memberId)?.lastName}`
+            description: `Remboursement cr\u00e9dit #${c.id} - ${members.find(m => m.id === c.memberId)?.lastName}`
           });
         }
         return { ...c, status };
       }
       return c;
     }));
-    toast.info(`Statut du crédit mis à jour : ${status}`);
+    toast.info(`Statut du cr\u00e9dit mis \u00e0 jour : ${status}`);
   };
 
   const deleteCredit = (id: string) => {
     setCredits(prev => prev.filter(c => c.id !== id));
-    toast.info("Crédit supprimé");
+    toast.info("Cr\u00e9dit supprim\u00e9");
   };
 
   const totalCash = 
@@ -240,7 +261,7 @@ export const ChoirProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const calculateAttendance = (sessions: AttendanceSession[]) => {
     if (sessions.length === 0) return 0;
     const totalPresent = sessions.reduce((acc, s) => {
-      const presentCount = Object.values(s.records).filter(r => r === "Présent" || r === "Retard").length;
+      const presentCount = Object.values(s.records).filter(r => r === "Pr\u00e9sent" || r === "Retard").length;
       return acc + (presentCount / members.length);
     }, 0);
     return (totalPresent / sessions.length) * 100;

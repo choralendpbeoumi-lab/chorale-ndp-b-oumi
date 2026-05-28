@@ -243,7 +243,7 @@ export const HRManagement: React.FC = () => {
                     <div className="w-[400px] h-[240px] bg-white border-2 border-primary/20 rounded-xl shadow-xl overflow-hidden relative font-sans text-foreground">
                       <div className="bg-primary text-primary-foreground p-3 flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <img src="https://storage.googleapis.com/dala-prod-public-storage/generated-images/4fbf6471-3232-4b8c-be90-2e48c4d6965f/choir-logo-a3ac4ce4-1779966833282.webp" className="w-8 h-8 object-contain bg-white rounded-full p-0.5" alt="Logo" />
+                          <img src="https://storage.googleapis.com/dala-prod-public-storage/attachments/ccab1cf2-1794-4f2c-9ed3-8994780f7688/1779989907288_image.png" className="w-8 h-8 object-contain bg-white rounded-full p-0.5" alt="Logo" />
                           <div>
                             <p className="text-[10px] font-bold leading-tight uppercase">Chorale Notre Dame de la Paix</p>
                             <p className="text-[8px] opacity-80 italic">Béoumi - Côte d'Ivoire</p>
@@ -293,21 +293,25 @@ export const HRManagement: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="absolute bottom-4 right-4 bg-white p-1 border border-primary/10 rounded shadow-sm">
+                        {/* QRCode moved up (bottom-8) and data enriched */}
+                        <div className="absolute bottom-8 right-4 bg-white p-1 border border-primary/10 rounded shadow-sm">
                           <QRCodeSVG 
                             value={JSON.stringify({
-                              id: editingMember?.id || 'NEW',
-                              name: `${memberForm.lastName} ${memberForm.firstName}`,
-                              v: memberForm.voicePart,
-                              r: memberForm.role
+                              ID: editingMember?.id || 'NOUVEAU',
+                              Nom: memberForm.lastName.toUpperCase(),
+                              Prenoms: memberForm.firstName,
+                              Pupitre: memberForm.voicePart,
+                              Fonction: memberForm.role,
+                              Telephone: memberForm.phone,
+                              Statut: memberForm.status
                             })} 
-                            size={55}
+                            size={65}
                             level="H"
                           />
                         </div>
                       </div>
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05] rotate-12 pointer-events-none">
-                         <img src="https://storage.googleapis.com/dala-prod-public-storage/generated-images/4fbf6471-3232-4b8c-be90-2e48c4d6965f/choir-logo-a3ac4ce4-1779966833282.webp" className="w-32 h-32 grayscale" alt="Watermark" />
+                         <img src="https://storage.googleapis.com/dala-prod-public-storage/attachments/ccab1cf2-1794-4f2c-9ed3-8994780f7688/1779989907288_image.png" className="w-32 h-32 grayscale" alt="Watermark" />
                       </div>
                     </div>
                   </div>

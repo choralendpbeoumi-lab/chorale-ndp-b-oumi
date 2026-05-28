@@ -14,8 +14,8 @@ export const Dashboard: React.FC = () => {
 
   const activeChoristers = members.filter(m => m.status === 'Actif').length;
   
-  // Financial Goal Example: Patronal Feast
-  const financialGoal = 500000;
+  // Financial Goal: Updated to 3,000,000 as per request
+  const financialGoal = 3000000;
   const goalProgress = Math.min((totalCash / financialGoal) * 100, 100);
 
   return (
@@ -70,7 +70,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="p-4 bg-accent/5 rounded-lg border border-accent/10">
               <p className="text-sm text-accent-foreground font-medium italic">
-                "Nous avons atteint {Math.round(goalProgress)}% de notre objectif pour l'achat de nouveaux uniformes et la fête patronale."
+                "Nous avons atteint {Math.round(goalProgress)}% de notre objectif de {financialGoal.toLocaleString()} FCFA pour les projets de la chorale."
               </p>
             </div>
           </CardContent>

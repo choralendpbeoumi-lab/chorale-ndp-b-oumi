@@ -4,17 +4,19 @@ import { Dashboard } from './components/dashboard/Dashboard';
 import { HRManagement } from './components/hr/HRManagement';
 import { FinanceManagement } from './components/finance/FinanceManagement';
 import { ProfilePage } from './components/profile/ProfilePage';
-import { LayoutDashboard, Users, CreditCard, Music, UserCircle } from 'lucide-react';
+import { ArchivesModule } from './components/archives/ArchivesModule';
+import { LayoutDashboard, Users, CreditCard, Music, UserCircle, Archive } from 'lucide-react';
 import { cn } from './lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'hr' | 'finance' | 'profile'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'hr' | 'finance' | 'profile' | 'archives'>('dashboard');
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'hr', label: 'Membres & RH', icon: Users },
     { id: 'finance', label: 'Trésorerie', icon: CreditCard },
+    { id: 'archives', label: 'Archives', icon: Archive },
     { id: 'profile', label: 'Profil', icon: UserCircle },
   ] as const;
 
@@ -85,6 +87,7 @@ function App() {
               {activeTab === 'dashboard' && <Dashboard />}
               {activeTab === 'hr' && <HRManagement />}
               {activeTab === 'finance' && <FinanceManagement />}
+              {activeTab === 'archives' && <ArchivesModule />}
               {activeTab === 'profile' && <ProfilePage />}
             </motion.div>
           </AnimatePresence>
@@ -103,16 +106,7 @@ function App() {
             >
               <item.icon className="w-5 h-5" />
               <span className="text-[10px] font-bold">{item.label}</span>
-              {activeTab === 'profile' && item.id === 'profile' && (
-                <motion.div layoutId="activeDot" className="w-1 h-1 bg-primary rounded-full mt-0.5" />
-              )}
-              {activeTab === 'dashboard' && item.id === 'dashboard' && (
-                <motion.div layoutId="activeDot" className="w-1 h-1 bg-primary rounded-full mt-0.5" />
-              )}
-               {activeTab === 'hr' && item.id === 'hr' && (
-                <motion.div layoutId="activeDot" className="w-1 h-1 bg-primary rounded-full mt-0.5" />
-              )}
-               {activeTab === 'finance' && item.id === 'finance' && (
+              {activeTab === item.id && (
                 <motion.div layoutId="activeDot" className="w-1 h-1 bg-primary rounded-full mt-0.5" />
               )}
             </button>

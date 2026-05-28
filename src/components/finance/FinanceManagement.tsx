@@ -16,7 +16,7 @@ import { generateReceiptPDF } from '@/lib/pdf-utils';
 import { toast } from 'sonner';
 
 const MONTHS = [
-  'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'
+  'Jan', 'F\u00e9v', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Ao\u00fbt', 'Sept', 'Oct', 'Nov', 'D\u00e9c'
 ];
 
 export const FinanceManagement: React.FC = () => {
@@ -54,7 +54,7 @@ export const FinanceManagement: React.FC = () => {
   const [monthlyForm, setMonthlyForm] = useState({
     memberId: '',
     month: new Date().getMonth() + 1,
-    amount: 420,
+    amount: 400, // Mis \u00e0 jour selon le PDF (100/semaine)
     date: new Date().toISOString().split('T')[0]
   });
 
@@ -78,7 +78,7 @@ export const FinanceManagement: React.FC = () => {
   }, [transactions, searchTerm, filterType]);
 
   const allHistory = useMemo(() => {
-    const regular = transactions.map(t => ({ ...t, source: 'Régulier' as const }));
+    const regular = transactions.map(t => ({ ...t, source: 'R\u00e9gulier' as const }));
     const exceptional = exceptionalContributions.map(c => {
       const member = members.find(m => m.id === c.memberId);
       return {
@@ -87,7 +87,7 @@ export const FinanceManagement: React.FC = () => {
         category: 'Cotisation Exceptionnelle',
         amount: c.amount,
         date: c.date,
-        description: c.description || `Versé par ${member?.lastName || 'Membre'}`,
+        description: c.description || `Vers\u00e9 par ${member?.lastName || 'Membre'}`,
         source: 'Exceptionnel' as const,
         memberId: c.memberId
       };
@@ -104,7 +104,7 @@ export const FinanceManagement: React.FC = () => {
 
   const handleAddTransaction = () => {
     if (txForm.amount <= 0) {
-      toast.error('Le montant doit être supérieur à 0');
+      toast.error('Le montant doit \u00eatre sup\u00e9rieur \u00e0 0');
       return;
     }
     const newTxData = { ...txForm, amount: Number(txForm.amount) };
@@ -158,7 +158,7 @@ export const FinanceManagement: React.FC = () => {
     const tempTx: Transaction = { id: Math.random().toString(36).substr(2, 9).toUpperCase(), ...newTxData };
     generateReceiptPDF(tempTx, member);
     setIsAddingMonthly(false);
-    setMonthlyForm({ ...monthlyForm, amount: 420 });
+    setMonthlyForm({ ...monthlyForm, amount: 400 });
   };
 
   const handleAddCredit = () => {
@@ -169,7 +169,7 @@ export const FinanceManagement: React.FC = () => {
     const newCreditData = { ...creditForm, amount: Number(creditForm.amount) };
     
     if (totalCash < newCreditData.amount) {
-      toast.error('Solde de trésorerie insuffisant');
+      toast.error('Solde de tr\u00e9sorerie insuffisant');
       return;
     }
 
@@ -177,11 +177,11 @@ export const FinanceManagement: React.FC = () => {
     
     const member = members.find(m => m.id === creditForm.memberId);
     addTransaction({
-      type: 'Dépense',
-      category: 'Crédit / Prêt',
+      type: 'D\u00e9pense',
+      category: 'Cr\u00e9dit / Pr\u00eat',
       amount: newCreditData.amount,
       date: creditForm.date,
-      description: `Sortie pour crédit accordé à ${member?.lastName}`
+      description: `Sortie pour cr\u00e9dit accord\u00e9 \u00e0 ${member?.lastName}`
     });
 
     setIsAddingCredit(false);
@@ -195,7 +195,8 @@ export const FinanceManagement: React.FC = () => {
 
   const getMemberTotal = (memberId: string) => {
     const userContrib = contributions.find(c => c.memberId === memberId && c.year === new Date().getFullYear());
-    return (userContrib?.paidMonths.length || 0) * 420;
+    // On utilise 400 comme base pour le calcul du cumul mensuel
+    return (userContrib?.paidMonths.length || 0) * 400;
   };
 
   const calculateGrandTotalMensuel = () => {
@@ -212,8 +213,8 @@ export const FinanceManagement: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Gestion Financière</h1>
-          <p className="text-muted-foreground">Suivi des cotisations, de la trésorerie et des crédits.</p>
+          <h1 className="text-3xl font-bold text-primary">Gestion Financi\u00e8re</h1>
+          <p className="text-muted-foreground">Suivi des cotisations, de la tr\u00e9sorerie et des cr\u00e9dits.</p>
         </div>
         <div className="flex gap-4 flex-wrap">
           <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex items-center gap-4 min-w-[200px]">
@@ -230,7 +231,7 @@ export const FinanceManagement: React.FC = () => {
               <Landmark className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-xs text-amber-600 uppercase font-semibold">Crédits en cours</p>
+              <p className="text-xs text-amber-600 uppercase font-semibold">Cr\u00e9dits en cours</p>
               <p className="text-2xl font-black text-amber-700">{totalPendingCredits.toLocaleString()} FCFA</p>
             </div>
           </div>
@@ -243,12 +244,12 @@ export const FinanceManagement: React.FC = () => {
             <History className="w-4 h-4" />
             <span className="hidden sm:inline">Historique</span>
           </TabsTrigger>
-          <TabsTrigger value="tresorerie">Trésorerie</TabsTrigger>
+          <TabsTrigger value="tresorerie">Tr\u00e9sorerie</TabsTrigger>
           <TabsTrigger value="cotisations">Cotisations</TabsTrigger>
           <TabsTrigger value="exceptionnelles">Exceptionnelles</TabsTrigger>
           <TabsTrigger value="credits" className="flex items-center gap-2">
             <CreditCard className="w-4 h-4" />
-            <span className="hidden sm:inline">Crédits</span>
+            <span className="hidden sm:inline">Cr\u00e9dits</span>
           </TabsTrigger>
         </TabsList>
 
@@ -268,7 +269,7 @@ export const FinanceManagement: React.FC = () => {
                 <SelectContent>
                   <SelectItem value="Tous">Tout</SelectItem>
                   <SelectItem value="Recette">Recettes</SelectItem>
-                  <SelectItem value="Dépense">Dépenses</SelectItem>
+                  <SelectItem value="D\u00e9pense">D\u00e9penses</SelectItem>
                 </SelectContent>
               </Select>
            </div>
@@ -278,7 +279,7 @@ export const FinanceManagement: React.FC = () => {
               <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="text-xs">Date</TableHead>
-                  <TableHead className="text-xs">Détails</TableHead>
+                  <TableHead className="text-xs">D\u00e9tails</TableHead>
                   <TableHead className="text-xs hidden md:table-cell">Source</TableHead>
                   <TableHead className="text-right text-xs">Montant</TableHead>
                   <TableHead className="w-[140px] text-center text-xs">Action</TableHead>
@@ -317,7 +318,7 @@ export const FinanceManagement: React.FC = () => {
                           }}
                         >
                           <FileText className="w-3 h-3" />
-                          <span>Reçu PDF</span>
+                          <span>Re\u00e7u PDF</span>
                         </Button>
                     </TableCell>
                   </TableRow>
@@ -325,7 +326,7 @@ export const FinanceManagement: React.FC = () => {
                 {allHistory.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-10 text-muted-foreground text-xs italic">
-                      Aucun mouvement trouvé.
+                      Aucun mouvement trouv\u00e9.
                     </TableCell>
                   </TableRow>
                 )}
@@ -339,7 +340,7 @@ export const FinanceManagement: React.FC = () => {
             <div className="p-4 border-b bg-muted/20 flex justify-between items-center">
               <h3 className="font-semibold text-sm">Cotisations Mensuelles ({new Date().getFullYear()})</h3>
               <div className="flex items-center gap-3">
-                <div className="text-[10px] bg-accent/20 text-accent-foreground px-2 py-1 rounded font-bold">Standard: 420 FCFA / mois</div>
+                <div className="text-[10px] bg-accent/20 text-accent-foreground px-2 py-1 rounded font-bold">Standard: 400 FCFA / mois</div>
                 
                 <Dialog open={isAddingMonthly} onOpenChange={setIsAddingMonthly}>
                   <DialogTrigger asChild>
@@ -389,7 +390,7 @@ export const FinanceManagement: React.FC = () => {
                     <DialogFooter>
                       <Button onClick={handleAddMonthly} className="w-full">
                         <Check className="w-4 h-4 mr-2" />
-                        Enregistrer & Générer Reçu
+                        Enregistrer & G\u00e9n\u00e9rer Re\u00e7u
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -455,7 +456,7 @@ export const FinanceManagement: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input 
                   className="pl-10 min-w-[200px]" 
-                  placeholder="Rechercher une opération..." 
+                  placeholder="Rechercher une op\u00e9ration..." 
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                 />
@@ -465,7 +466,7 @@ export const FinanceManagement: React.FC = () => {
                 <SelectContent>
                   <SelectItem value="Tous">Tout</SelectItem>
                   <SelectItem value="Recette">Recettes</SelectItem>
-                  <SelectItem value="Dépense">Dépenses</SelectItem>
+                  <SelectItem value="D\u00e9pense">D\u00e9penses</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -474,7 +475,7 @@ export const FinanceManagement: React.FC = () => {
               <DialogTrigger asChild>
                 <Button className="bg-primary hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" />
-                  Nouvelle Opération
+                  Nouvelle Op\u00e9ration
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -489,7 +490,7 @@ export const FinanceManagement: React.FC = () => {
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Recette">Recette (+)</SelectItem>
-                          <SelectItem value="Dépense">Dépense (-)</SelectItem>
+                          <SelectItem value="D\u00e9pense">D\u00e9pense (-)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -504,16 +505,16 @@ export const FinanceManagement: React.FC = () => {
                       <Input type="number" value={txForm.amount} onChange={e => setTxForm({...txForm, amount: Number(e.target.value)})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Catégorie</label>
+                      <label className="text-sm font-medium">Cat\u00e9gorie</label>
                       <Select value={txForm.category} onValueChange={(v) => setTxForm({...txForm, category: v})}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Cotisations">Cotisations</SelectItem>
                           <SelectItem value="Dons">Dons / Offrandes</SelectItem>
-                          <SelectItem value="Achat">Achat Matériel</SelectItem>
+                          <SelectItem value="Achat">Achat Mat\u00e9riel</SelectItem>
                           <SelectItem value="Transport">Transport</SelectItem>
                           <SelectItem value="Sono">Sonorisation</SelectItem>
-                          <SelectItem value="Fête">Fête / Réception</SelectItem>
+                          <SelectItem value="F\u00eate">F\u00eate / R\u00e9ception</SelectItem>
                           <SelectItem value="Autre">Autre</SelectItem>
                         </SelectContent>
                       </Select>
@@ -521,11 +522,11 @@ export const FinanceManagement: React.FC = () => {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Description</label>
-                    <Input value={txForm.description} onChange={e => setTxForm({...txForm, description: e.target.value})} placeholder="Détail de l'opération..." />
+                    <Input value={txForm.description} onChange={e => setTxForm({...txForm, description: e.target.value})} placeholder="D\u00e9tail de l'op\u00e9ration..." />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleAddTransaction} className="w-full">Valider & Générer Reçu</Button>
+                  <Button onClick={handleAddTransaction} className="w-full">Valider & G\u00e9n\u00e9rer Re\u00e7u</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -537,7 +538,7 @@ export const FinanceManagement: React.FC = () => {
                 <TableRow>
                   <TableHead className="text-xs">Date</TableHead>
                   <TableHead className="text-xs">Description</TableHead>
-                  <TableHead className="text-xs hidden sm:table-cell">Catégorie</TableHead>
+                  <TableHead className="text-xs hidden sm:table-cell">Cat\u00e9gorie</TableHead>
                   <TableHead className="text-right text-xs">Montant</TableHead>
                   <TableHead className="w-[120px] text-center text-xs">Actions</TableHead>
                 </TableRow>
@@ -569,7 +570,7 @@ export const FinanceManagement: React.FC = () => {
                           variant="ghost" 
                           size="icon" 
                           className="h-7 w-7 text-primary"
-                          title="Générer le reçu PDF"
+                          title="G\u00e9n\u00e9rer le re\u00e7u PDF"
                           onClick={() => generateReceiptPDF(tx)}
                         >
                           <FileText className="w-4 h-4" />
@@ -595,7 +596,7 @@ export const FinanceManagement: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h3 className="font-semibold text-sm">Cotisations Exceptionnelles</h3>
-              <p className="text-[10px] text-muted-foreground">Dons spéciaux, projets spécifiques, etc.</p>
+              <p className="text-[10px] text-muted-foreground">Dons sp\u00e9ciaux, projets sp\u00e9cifiques, etc.</p>
             </div>
             <Dialog open={isAddingExceptional} onOpenChange={setIsAddingExceptional}>
               <DialogTrigger asChild>
@@ -632,11 +633,11 @@ export const FinanceManagement: React.FC = () => {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Description / Motif</label>
-                    <Input value={excForm.description} onChange={e => setExcForm({...excForm, description: e.target.value})} placeholder="Ex: Projet Uniformes, Don Spécial..." />
+                    <Input value={excForm.description} onChange={e => setExcForm({...excForm, description: e.target.value})} placeholder="Ex: Projet Uniformes, Don Sp\u00e9cial..." />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleAddExceptional} className="w-full bg-accent text-accent-foreground">Enregistrer & Générer Reçu</Button>
+                  <Button onClick={handleAddExceptional} className="w-full bg-accent text-accent-foreground">Enregistrer & G\u00e9n\u00e9rer Re\u00e7u</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -722,19 +723,19 @@ export const FinanceManagement: React.FC = () => {
         <TabsContent value="credits" className="pt-4 space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-semibold text-sm">Gestion des Crédits</h3>
-              <p className="text-[10px] text-muted-foreground">Prêts accordés aux membres de la chorale.</p>
+              <h3 className="font-semibold text-sm">Gestion des Cr\u00e9dits</h3>
+              <p className="text-[10px] text-muted-foreground">Pr\u00eats accord\u00e9s aux membres de la chorale.</p>
             </div>
             <Dialog open={isAddingCredit} onOpenChange={setIsAddingCredit}>
               <DialogTrigger asChild>
                 <Button className="bg-amber-600 hover:bg-amber-700">
                   <Plus className="w-4 h-4 mr-2" />
-                  Accorder un Crédit
+                  Accorder un Cr\u00e9dit
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Nouveau Crédit</DialogTitle>
+                  <DialogTitle>Nouveau Cr\u00e9dit</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="space-y-2">
@@ -754,21 +755,21 @@ export const FinanceManagement: React.FC = () => {
                       <Input type="number" value={creditForm.amount} onChange={e => setCreditForm({...creditForm, amount: Number(e.target.value)})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Date du prêt</label>
+                      <label className="text-sm font-medium">Date du pr\u00eat</label>
                       <Input type="date" value={creditForm.date} onChange={e => setCreditForm({...creditForm, date: e.target.value})} />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Date d'échéance (facultatif)</label>
+                    <label className="text-sm font-medium">Date d'\u00e9ch\u00e9ance (facultatif)</label>
                     <Input type="date" value={creditForm.dueDate} onChange={e => setCreditForm({...creditForm, dueDate: e.target.value})} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Motif / Description</label>
-                    <Input value={creditForm.description} onChange={e => setCreditForm({...creditForm, description: e.target.value})} placeholder="Raison du crédit..." />
+                    <Input value={creditForm.description} onChange={e => setCreditForm({...creditForm, description: e.target.value})} placeholder="Raison du cr\u00e9dit..." />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleAddCredit} className="w-full bg-amber-600 hover:bg-amber-700">Valider le Crédit</Button>
+                  <Button onClick={handleAddCredit} className="w-full bg-amber-600 hover:bg-amber-700">Valider le Cr\u00e9dit</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -796,7 +797,7 @@ export const FinanceManagement: React.FC = () => {
                         {format(new Date(c.date), 'dd/MM/yy')}
                         {c.dueDate && (
                           <div className="text-[8px] text-muted-foreground">
-                            Échéance: {format(new Date(c.dueDate), 'dd/MM/yy')}
+                            \u00c9ch\u00e9ance: {format(new Date(c.dueDate), 'dd/MM/yy')}
                           </div>
                         )}
                       </TableCell>
@@ -817,8 +818,8 @@ export const FinanceManagement: React.FC = () => {
                             variant="outline" 
                             className={cn(
                               "text-[9px] px-1.5 h-5",
-                              c.status === 'Remboursé' ? "border-green-200 text-green-700 bg-green-50" :
-                              c.status === 'Annulé' ? "border-slate-200 text-slate-700 bg-slate-50" :
+                              c.status === 'Rembours\u00e9' ? "border-green-200 text-green-700 bg-green-50" :
+                              c.status === 'Annul\u00e9' ? "border-slate-200 text-slate-700 bg-slate-50" :
                               isOverdue ? "border-red-200 text-red-700 bg-red-50 animate-pulse" : "border-amber-200 text-amber-700 bg-amber-50"
                             )}
                           >
@@ -832,7 +833,7 @@ export const FinanceManagement: React.FC = () => {
                               variant="outline" 
                               size="sm" 
                               className="h-7 px-2 text-[9px] border-green-200 text-green-700 hover:bg-green-50"
-                              onClick={() => { if(confirm('Marquer ce crédit comme remboursé ?')) updateCreditStatus(c.id, 'Remboursé'); }}
+                              onClick={() => { if(confirm('Marquer ce cr\u00e9dit comme rembours\u00e9 ?')) updateCreditStatus(c.id, 'Rembours\u00e9'); }}
                             >
                               Rembourser
                             </Button>
@@ -841,7 +842,7 @@ export const FinanceManagement: React.FC = () => {
                             variant="ghost" 
                             size="icon" 
                             className="h-7 w-7 text-destructive"
-                            onClick={() => { if(confirm('Supprimer ce crédit ?')) deleteCredit(c.id); }}
+                            onClick={() => { if(confirm('Supprimer ce cr\u00e9dit ?')) deleteCredit(c.id); }}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
@@ -855,7 +856,7 @@ export const FinanceManagement: React.FC = () => {
                     <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                       <div className="flex flex-col items-center gap-2">
                         <Landmark className="w-8 h-8 opacity-20" />
-                        <p className="text-xs italic">Aucun crédit enregistré.</p>
+                        <p className="text-xs italic">Aucun cr\u00e9dit enregistr\u00e9.</p>
                       </div>
                     </TableCell>
                   </TableRow>
